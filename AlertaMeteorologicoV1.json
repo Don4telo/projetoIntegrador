@@ -1,0 +1,1546 @@
+[
+    {
+        "id": "9f90e29e.91165",
+        "type": "subflow",
+        "name": "Serie temporal",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 70,
+                "y": 152.82897663116455,
+                "wires": [
+                    {
+                        "id": "8d442ed4.05c2e"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 609.9670124053955,
+                "y": 100.00000953674316,
+                "wires": [
+                    {
+                        "id": "831c5785.c98638",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 620.1345195770264,
+                "y": 237.33416175842285,
+                "wires": [
+                    {
+                        "id": "5846524c.9e399c",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": []
+    },
+    {
+        "id": "831c5785.c98638",
+        "type": "function",
+        "z": "9f90e29e.91165",
+        "name": "ultimo dia temp",
+        "func": "msg.payload = msg.payload.metar.temperatura[0]\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 426.6337013244629,
+        "y": 91.11111259460449,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5846524c.9e399c",
+        "type": "function",
+        "z": "9f90e29e.91165",
+        "name": "ultimo dia umid",
+        "func": "msg.payload = msg.payload.metar.umidade[0]\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 426.8012351989746,
+        "y": 241.77860260009766,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8d442ed4.05c2e",
+        "type": "function",
+        "z": "9f90e29e.91165",
+        "name": "concentrador",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 220,
+        "y": 152.82897663116455,
+        "wires": [
+            [
+                "5846524c.9e399c",
+                "831c5785.c98638"
+            ]
+        ]
+    },
+    {
+        "id": "ac7cef2.089041",
+        "type": "subflow",
+        "name": "alertaUmidade",
+        "info": "",
+        "category": "analysis",
+        "in": [
+            {
+                "x": 95.00000190734863,
+                "y": 256.9999942779541,
+                "wires": [
+                    {
+                        "id": "9363538d.e73d8"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 790.9999732971191,
+                "y": 174.99998474121094,
+                "wires": [
+                    {
+                        "id": "30f78ae0.204896",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 793.9999732971191,
+                "y": 222.9999942779541,
+                "wires": [
+                    {
+                        "id": "8a1ae8d1.af1c28",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 797.0000143051147,
+                "y": 272.99998664855957,
+                "wires": [
+                    {
+                        "id": "a387528c.c706b",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 800,
+                "y": 317.99999046325684,
+                "wires": [
+                    {
+                        "id": "a1706c64.608ad",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": []
+    },
+    {
+        "id": "9363538d.e73d8",
+        "type": "function",
+        "z": "ac7cef2.089041",
+        "name": "logicaUmidade",
+        "func": "\nif (parseInt(msg.payload.metar.umidade[0]) < 12){\nmsg.payload.seco = true;\nmsg.payload.irrigacao = true;\nmsg.payload.umido = false;\nmsg.payload.ventilacao = false;\n}\nelse if (parseInt(msg.payload.metar.umidade[0]) >= 80){\nmsg.payload.seco = false;\nmsg.payload.irrigacao = false;\nmsg.payload.umido = true;\nmsg.payload.ventilacao = true;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 269.00011444091797,
+        "y": 252.99999237060547,
+        "wires": [
+            [
+                "30f78ae0.204896",
+                "29a9d246.95952e",
+                "8a1ae8d1.af1c28",
+                "a387528c.c706b",
+                "a1706c64.608ad"
+            ]
+        ]
+    },
+    {
+        "id": "8a1ae8d1.af1c28",
+        "type": "function",
+        "z": "ac7cef2.089041",
+        "name": "umidoLogica",
+        "func": "if(msg.payload.seco === false){\n    msg.payload.delete;\n    msg.payload = true;\n}\nelse{\n    msg.payload.delete;\n    msg.payload = false;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 564.0833168029785,
+        "y": 219.5590114593506,
+        "wires": [
+            [
+                "81087789.636a58"
+            ]
+        ]
+    },
+    {
+        "id": "30f78ae0.204896",
+        "type": "function",
+        "z": "ac7cef2.089041",
+        "name": "secoLogica",
+        "func": "\nif(msg.payload.seco === true){\n    msg.payload.delete;\n    msg.payload = true;\n}\nelse{\n    msg.payload.delete;\n    msg.payload = false;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 562.0694618225098,
+        "y": 177.55555629730225,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a387528c.c706b",
+        "type": "function",
+        "z": "ac7cef2.089041",
+        "name": "irrigaLogica",
+        "func": "\nif(msg.payload.seco === true){\n    msg.payload.delete;\n    msg.payload = true;\n}\nelse{\n    msg.payload.delete;\n    msg.payload = false;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 568.0694427490234,
+        "y": 263.5590629577637,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a1706c64.608ad",
+        "type": "function",
+        "z": "ac7cef2.089041",
+        "name": "ventilaLogica",
+        "func": "if(msg.payload.umido === true){\n    msg.payload.delete;\n    msg.payload = true;\n}\nelse{\n    msg.payload.delete;\n    msg.payload = false;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 570.0694427490234,
+        "y": 311.5555591583252,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "29a9d246.95952e",
+        "type": "debug",
+        "z": "ac7cef2.089041",
+        "name": "Umidade",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 516.0799255371094,
+        "y": 41.5208854675293,
+        "wires": []
+    },
+    {
+        "id": "81087789.636a58",
+        "type": "debug",
+        "z": "ac7cef2.089041",
+        "name": "estado",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "jsonata",
+        "x": 806.0833778381348,
+        "y": 38.51389694213867,
+        "wires": []
+    },
+    {
+        "id": "ccb2d95c.58f1e8",
+        "type": "subflow",
+        "name": "alertaTemperatura",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 62.00001525878906,
+                "y": 221.163179397583,
+                "wires": [
+                    {
+                        "id": "3aaba7d7.f463a8"
+                    },
+                    {
+                        "id": "87d42f42.b02c3"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 863.999963760376,
+                "y": 169.00000095367432,
+                "wires": [
+                    {
+                        "id": "e18c8c5d.b72f4",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 864.9999771118164,
+                "y": 215.99998950958252,
+                "wires": [
+                    {
+                        "id": "53900801.e89128",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 864.0000171661377,
+                "y": 264,
+                "wires": [
+                    {
+                        "id": "6f23975a.6e80c8",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 867.9999904632568,
+                "y": 309.0000228881836,
+                "wires": [
+                    {
+                        "id": "94b4691.78fd798",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": []
+    },
+    {
+        "id": "1be84c9f.d73de3",
+        "type": "debug",
+        "z": "ccb2d95c.58f1e8",
+        "name": "msgCompleta",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 267.00704193115234,
+        "y": 38.00352382659912,
+        "wires": []
+    },
+    {
+        "id": "3aaba7d7.f463a8",
+        "type": "debug",
+        "z": "ccb2d95c.58f1e8",
+        "name": "metarTemp",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.metar.temperatura[0]",
+        "targetType": "jsonata",
+        "x": 115.01739120483398,
+        "y": 355.0104432106018,
+        "wires": []
+    },
+    {
+        "id": "bc2556ef.aff498",
+        "type": "debug",
+        "z": "ccb2d95c.58f1e8",
+        "name": "FRio",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.frio",
+        "targetType": "jsonata",
+        "x": 260.01748275756836,
+        "y": 77.01040458679199,
+        "wires": []
+    },
+    {
+        "id": "87d42f42.b02c3",
+        "type": "function",
+        "z": "ccb2d95c.58f1e8",
+        "name": "logicaAlerta",
+        "func": "\n// le a temperatura converte pra int e se for menor que 20 estado frio = true, liga aquecedor = true\nif (parseInt(msg.payload.metar.temperatura[0]) < 20){ \nmsg.payload.frio = true;\nmsg.payload.aquecimento = true;\nmsg.payload.calor = false;\nmsg.payload.ventilacao = false;\n}\n// le a temperatura converte pra int e se estiver entre 20 e 24, estado frio = false, estado calor = false\nif ((parseInt(msg.payload.metar.temperatura[0]) >= 20) && (parseInt(msg.payload.metar.temperatura[0]) < 24)){\nmsg.payload.frio = false;\nmsg.payload.aquecimento = false;\nmsg.payload.calor = false;\nmsg.payload.ventilacao = false;\n}\n// le a temperatura converte pra int e se for maior que 26 estado calor = true, liga ventilação = true\nif (parseInt(msg.payload.metar.temperatura[0]) >= 26){\nmsg.payload.frio = false;\nmsg.payload.aquecimento = false;\nmsg.payload.calor = true;\nmsg.payload.ventilacao = true;\n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 213.07293701171875,
+        "y": 222.7777976989746,
+        "wires": [
+            [
+                "1be84c9f.d73de3",
+                "bc2556ef.aff498",
+                "e18c8c5d.b72f4",
+                "94b4691.78fd798",
+                "1cb54742.1ecca9",
+                "53900801.e89128",
+                "6f23975a.6e80c8"
+            ]
+        ]
+    },
+    {
+        "id": "b298d86a.a2b138",
+        "type": "debug",
+        "z": "ccb2d95c.58f1e8",
+        "name": "soPayload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 615.0173187255859,
+        "y": 44.01046371459961,
+        "wires": []
+    },
+    {
+        "id": "e18c8c5d.b72f4",
+        "type": "function",
+        "z": "ccb2d95c.58f1e8",
+        "name": "logicaFrio",
+        "func": "\nif(msg.payload.frio === true){\n    msg.payload.delete;\n    msg.payload = true;\n}\nelse{\n    msg.payload.delete;\n    msg.payload = false;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 482.0765037536621,
+        "y": 171.99994468688965,
+        "wires": [
+            [
+                "4140c67c.8c9cc8"
+            ]
+        ]
+    },
+    {
+        "id": "53900801.e89128",
+        "type": "function",
+        "z": "ccb2d95c.58f1e8",
+        "name": "logicaCalor",
+        "func": "\nif(msg.payload.calor === true){\n    msg.payload.delete;\n    msg.payload = true;\n}\nelse{\n    msg.payload.delete;\n    msg.payload = false;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 492.01744079589844,
+        "y": 211.01038360595703,
+        "wires": [
+            [
+                "b298d86a.a2b138"
+            ]
+        ]
+    },
+    {
+        "id": "6f23975a.6e80c8",
+        "type": "function",
+        "z": "ccb2d95c.58f1e8",
+        "name": "logicaVentilacao",
+        "func": "\nif(msg.payload.ventilacao === true){\n    msg.payload.delete;\n    msg.payload = true;\n}\nelse{\n    msg.payload.delete;\n    msg.payload = false;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500.0173034667969,
+        "y": 252.01040363311768,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1cb54742.1ecca9",
+        "type": "debug",
+        "z": "ccb2d95c.58f1e8",
+        "name": "oioi",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "jsonata",
+        "x": 283.07646560668945,
+        "y": 432.52087116241455,
+        "wires": []
+    },
+    {
+        "id": "94b4691.78fd798",
+        "type": "function",
+        "z": "ccb2d95c.58f1e8",
+        "name": "logicaAquecimento",
+        "func": "\nif(msg.payload.aquecimento === true){\n    msg.payload.delete;\n    msg.payload = true;\n}\nelse{\n    msg.payload.delete;\n    msg.payload = false;\n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 510.06954193115234,
+        "y": 296.5555582046509,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "65acfb9.11d3d04",
+        "type": "ui_toast",
+        "z": "ccb2d95c.58f1e8",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "topic": "",
+        "name": "Popup",
+        "x": 1048.3333892822266,
+        "y": 56.66668510437012,
+        "wires": []
+    },
+    {
+        "id": "4140c67c.8c9cc8",
+        "type": "template",
+        "z": "ccb2d95c.58f1e8",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "This is the payload: {{payload}} !",
+        "output": "str",
+        "x": 768.3333333333333,
+        "y": 109.99999999999999,
+        "wires": [
+            [
+                "65acfb9.11d3d04"
+            ]
+        ]
+    },
+    {
+        "id": "3d831a06.21f3b6",
+        "type": "tab",
+        "label": "Alerta Meteorologico",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "2a653858.aa0428",
+        "type": "inject",
+        "z": "3d831a06.21f3b6",
+        "name": "Clock",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 108.93806838989258,
+        "y": 209.23811721801758,
+        "wires": [
+            [
+                "bdb2e8a1.4cef18"
+            ]
+        ]
+    },
+    {
+        "id": "bdb2e8a1.4cef18",
+        "type": "http request",
+        "z": "3d831a06.21f3b6",
+        "name": "inpe",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "http://servicos.cptec.inpe.br/XML/estacao/SBSM/condicoesAtuais.xml",
+        "tls": "",
+        "proxy": "",
+        "authType": "basic",
+        "x": 190.97000885009766,
+        "y": 297.4444999694824,
+        "wires": [
+            [
+                "77917b17.458c84",
+                "91fbe1ab.cbb08"
+            ]
+        ]
+    },
+    {
+        "id": "77917b17.458c84",
+        "type": "debug",
+        "z": "3d831a06.21f3b6",
+        "name": "xml",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "headers.date ",
+        "targetType": "jsonata",
+        "x": 198.29383850097656,
+        "y": 95.85729217529297,
+        "wires": []
+    },
+    {
+        "id": "622e006b.6bb2b",
+        "type": "ui_gauge",
+        "z": "3d831a06.21f3b6",
+        "name": "Temperatura",
+        "group": "8f6dbca5.da76d",
+        "order": 1,
+        "width": "4",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Temperatura",
+        "label": "°C",
+        "format": "{{payload.metar.temperatura[0]}}",
+        "min": "-10",
+        "max": "44",
+        "colors": [
+            "#359aff",
+            "#008040",
+            "#ca3838"
+        ],
+        "seg1": "20",
+        "seg2": "26",
+        "x": 752.7063293457031,
+        "y": 327.7461099624634,
+        "wires": []
+    },
+    {
+        "id": "e737867a.966f38",
+        "type": "debug",
+        "z": "3d831a06.21f3b6",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.metar.temperatura[0]",
+        "targetType": "jsonata",
+        "x": 378.07166290283203,
+        "y": 110.76194953918457,
+        "wires": []
+    },
+    {
+        "id": "91fbe1ab.cbb08",
+        "type": "xml",
+        "z": "3d831a06.21f3b6",
+        "name": "xml",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 256.2859001159668,
+        "y": 384.6667137145996,
+        "wires": [
+            [
+                "cee15f59.dd63b",
+                "622e006b.6bb2b",
+                "e737867a.966f38",
+                "566de659.efea78",
+                "d325c36b.f6eaa",
+                "3199b35a.cedd3c",
+                "61a98465.e7717c",
+                "60fdcaa7.bbde04"
+            ]
+        ]
+    },
+    {
+        "id": "3199b35a.cedd3c",
+        "type": "ui_gauge",
+        "z": "3d831a06.21f3b6",
+        "name": "",
+        "group": "8f6dbca5.da76d",
+        "order": 2,
+        "width": "4",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Umidade",
+        "label": "%",
+        "format": "{{payload.metar.umidade[0]}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ff0000",
+            "#008040",
+            "#ff0000"
+        ],
+        "seg1": "30",
+        "seg2": "80",
+        "x": 759.3016052246094,
+        "y": 517.39697265625,
+        "wires": []
+    },
+    {
+        "id": "cee15f59.dd63b",
+        "type": "debug",
+        "z": "3d831a06.21f3b6",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 427.5555877685547,
+        "y": 217.77784657478333,
+        "wires": []
+    },
+    {
+        "id": "566de659.efea78",
+        "type": "subflow:ccb2d95c.58f1e8",
+        "z": "3d831a06.21f3b6",
+        "name": "Modulo Temperatua",
+        "env": [
+            {
+                "name": "frio",
+                "type": "bool",
+                "value": "false"
+            },
+            {
+                "name": "calor",
+                "type": "bool",
+                "value": "false"
+            },
+            {
+                "name": "ventilacao",
+                "type": "bool",
+                "value": "false"
+            },
+            {
+                "name": "aquecimento",
+                "type": "bool",
+                "value": "false"
+            }
+        ],
+        "x": 733.3507385253906,
+        "y": 399.0739059448242,
+        "wires": [
+            [
+                "6ac7ae98.d1b7d"
+            ],
+            [
+                "469d15f7.eb8dfc"
+            ],
+            [
+                "81a1315c.7596e"
+            ],
+            [
+                "94d4d389.6cc3c"
+            ]
+        ]
+    },
+    {
+        "id": "6ac7ae98.d1b7d",
+        "type": "ui_led",
+        "z": "3d831a06.21f3b6",
+        "group": "6c19d3dd.f9765c",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "label": "Frio",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "red",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Frio",
+        "x": 964.1283569335938,
+        "y": 322.3120574951172,
+        "wires": []
+    },
+    {
+        "id": "469d15f7.eb8dfc",
+        "type": "ui_led",
+        "z": "3d831a06.21f3b6",
+        "group": "6c19d3dd.f9765c",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "label": "Calor",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "red",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Calor",
+        "x": 961.7441139221191,
+        "y": 363.0580024719238,
+        "wires": []
+    },
+    {
+        "id": "81a1315c.7596e",
+        "type": "ui_led",
+        "z": "3d831a06.21f3b6",
+        "group": "7cbff095.7585b",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "label": "Ventilador",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "yellow",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Ventilador",
+        "x": 1153.7757034301758,
+        "y": 377.3561725616455,
+        "wires": []
+    },
+    {
+        "id": "94d4d389.6cc3c",
+        "type": "ui_led",
+        "z": "3d831a06.21f3b6",
+        "group": "7cbff095.7585b",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "label": "Aquecedor",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "yellow",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Aquecedor",
+        "x": 1160.9246826171875,
+        "y": 420.2316951751709,
+        "wires": []
+    },
+    {
+        "id": "d325c36b.f6eaa",
+        "type": "subflow:ac7cef2.089041",
+        "z": "3d831a06.21f3b6",
+        "name": "Modulo Umidade",
+        "env": [],
+        "x": 734.9062881469727,
+        "y": 584.830940246582,
+        "wires": [
+            [
+                "236d008a.ca5ea"
+            ],
+            [
+                "cc26d658.838bc8"
+            ],
+            [
+                "858b56d5.fc63c8"
+            ],
+            [
+                "36c8beff.936c42"
+            ]
+        ]
+    },
+    {
+        "id": "236d008a.ca5ea",
+        "type": "ui_led",
+        "z": "3d831a06.21f3b6",
+        "group": "6c19d3dd.f9765c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "Seco",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "red",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Seco",
+        "x": 971.1125946044922,
+        "y": 519.6294975280762,
+        "wires": []
+    },
+    {
+        "id": "cc26d658.838bc8",
+        "type": "ui_led",
+        "z": "3d831a06.21f3b6",
+        "group": "6c19d3dd.f9765c",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "Umido",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "red",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Umido",
+        "x": 969.8235130310059,
+        "y": 565.4390420913696,
+        "wires": []
+    },
+    {
+        "id": "858b56d5.fc63c8",
+        "type": "ui_led",
+        "z": "3d831a06.21f3b6",
+        "group": "7cbff095.7585b",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "Irrigador",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "yellow",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Irrigador",
+        "x": 1155.8234329223633,
+        "y": 602.1497087478638,
+        "wires": []
+    },
+    {
+        "id": "36c8beff.936c42",
+        "type": "ui_led",
+        "z": "3d831a06.21f3b6",
+        "group": "7cbff095.7585b",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "Desumidificador",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "yellow",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Secador",
+        "x": 1156.0835800170898,
+        "y": 645.4539241790771,
+        "wires": []
+    },
+    {
+        "id": "acc72b92.9f72b8",
+        "type": "ui_chart",
+        "z": "3d831a06.21f3b6",
+        "name": "Ultimo dia",
+        "group": "723e83e.81f7f7c",
+        "order": 1,
+        "width": "8",
+        "height": "4",
+        "label": "Ultimo dia",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "40",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff8000",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "outputs": 1,
+        "x": 1138.1842079162598,
+        "y": 174.1354751586914,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d0c79834.bcd5b8",
+        "type": "debug",
+        "z": "3d831a06.21f3b6",
+        "name": "simppla",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1118.0174598693848,
+        "y": 123.12153053283691,
+        "wires": []
+    },
+    {
+        "id": "e679d68b.cd2208",
+        "type": "ui_slider",
+        "z": "3d831a06.21f3b6",
+        "name": "tempMinima",
+        "label": "Temp Mínima",
+        "tooltip": "Selecione a temperatura de alarme",
+        "group": "24139a12.3f2eb6",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "condicao/temp/minima",
+        "min": "-10",
+        "max": "44",
+        "step": 1,
+        "x": 607.6071701049805,
+        "y": 809.1399917602539,
+        "wires": [
+            [
+                "48e30f8e.3031d",
+                "8ab41aa4.cc3d48"
+            ]
+        ]
+    },
+    {
+        "id": "a3789d87.75cf5",
+        "type": "ui_slider",
+        "z": "3d831a06.21f3b6",
+        "name": "umidMinima",
+        "label": "Umidade Minima",
+        "tooltip": "seleciona a umidade de alarme",
+        "group": "24139a12.3f2eb6",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "condicao/umid/minima",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "x": 599.2356338500977,
+        "y": 922.2526159286499,
+        "wires": [
+            [
+                "8a8bd096.b33d6"
+            ]
+        ]
+    },
+    {
+        "id": "8a8bd096.b33d6",
+        "type": "ui_text",
+        "z": "3d831a06.21f3b6",
+        "group": "24139a12.3f2eb6",
+        "order": 8,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Umid Mínima",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 850.4856185913086,
+        "y": 921.4471702575684,
+        "wires": []
+    },
+    {
+        "id": "48e30f8e.3031d",
+        "type": "ui_text",
+        "z": "3d831a06.21f3b6",
+        "group": "24139a12.3f2eb6",
+        "order": 3,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Temp Mínima",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 849.6602172851562,
+        "y": 786.6929931640625,
+        "wires": []
+    },
+    {
+        "id": "1ae94e2b.43e422",
+        "type": "ui_text",
+        "z": "3d831a06.21f3b6",
+        "group": "24139a12.3f2eb6",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Condição de Alerta",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 842.5392227172852,
+        "y": 728.7219705581665,
+        "wires": []
+    },
+    {
+        "id": "100878da.7feb27",
+        "type": "ui_switch",
+        "z": "3d831a06.21f3b6",
+        "name": "",
+        "label": "Conforto Animal",
+        "tooltip": "Seleciona o modo de atuação para Conforto Animal",
+        "group": "4892a209.faeb9c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 588.7630500793457,
+        "y": 1153.3552055358887,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "88bc8f53.52b1",
+        "type": "ui_switch",
+        "z": "3d831a06.21f3b6",
+        "name": "",
+        "label": "Conforto Humano",
+        "tooltip": "Seleciona o modo de atuação para Conforto Humano",
+        "group": "4892a209.faeb9c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 601.1327972412109,
+        "y": 1249.6868686676025,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7ea819cc.ba9c58",
+        "type": "ui_switch",
+        "z": "3d831a06.21f3b6",
+        "name": "",
+        "label": "Conforto Vegetal",
+        "tooltip": "Seleciona o modo de atuação para Conforto Vegetal",
+        "group": "4892a209.faeb9c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 596.9263954162598,
+        "y": 1202.3059749603271,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5d14c720.9a5678",
+        "type": "ui_chart",
+        "z": "3d831a06.21f3b6",
+        "name": "Ultimo dia",
+        "group": "476293e6.680bfc",
+        "order": 1,
+        "width": "8",
+        "height": "4",
+        "label": "Ultimo dia",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff8000",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "outputs": 1,
+        "x": 1129.4663124084473,
+        "y": 227.78214073181152,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dabaabb1.da3bc8",
+        "type": "debug",
+        "z": "3d831a06.21f3b6",
+        "name": "singa",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1111.5408973693848,
+        "y": 277.09200859069824,
+        "wires": []
+    },
+    {
+        "id": "61a98465.e7717c",
+        "type": "subflow:9f90e29e.91165",
+        "z": "3d831a06.21f3b6",
+        "name": "Modulo serie temporal temporal",
+        "env": [],
+        "x": 827.1768341064453,
+        "y": 215.19576930999756,
+        "wires": [
+            [
+                "acc72b92.9f72b8",
+                "d0c79834.bcd5b8"
+            ],
+            [
+                "5d14c720.9a5678",
+                "dabaabb1.da3bc8"
+            ]
+        ]
+    },
+    {
+        "id": "60fdcaa7.bbde04",
+        "type": "function",
+        "z": "3d831a06.21f3b6",
+        "name": "modulo manual",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 351.77296447753906,
+        "y": 894.495475769043,
+        "wires": [
+            [
+                "e679d68b.cd2208",
+                "47d27797.a187d8",
+                "a3789d87.75cf5",
+                "28c04408.ce6eec"
+            ]
+        ]
+    },
+    {
+        "id": "26fd6c6d.6b1614",
+        "type": "function",
+        "z": "3d831a06.21f3b6",
+        "name": "modulo autonomo",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 368.3155822753906,
+        "y": 1211.9213314056396,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2fb2aa8c.363776",
+        "type": "function",
+        "z": "3d831a06.21f3b6",
+        "name": "modulo mqtt",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 378.2463607788086,
+        "y": 1577.640495300293,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e663108e.64de",
+        "type": "function",
+        "z": "3d831a06.21f3b6",
+        "name": "modulo envio de alerta",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 394.27284240722656,
+        "y": 1431.0977897644043,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "47d27797.a187d8",
+        "type": "ui_slider",
+        "z": "3d831a06.21f3b6",
+        "name": "tempMaxima",
+        "label": "Temp Máxima",
+        "tooltip": "seleciona a temperatura de alarme",
+        "group": "24139a12.3f2eb6",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "condicao/temp/maxima",
+        "min": "-10",
+        "max": "44",
+        "step": 1,
+        "x": 605.0218200683594,
+        "y": 864.5764789581299,
+        "wires": [
+            [
+                "2e3291d5.950b8e"
+            ]
+        ]
+    },
+    {
+        "id": "2e3291d5.950b8e",
+        "type": "ui_text",
+        "z": "3d831a06.21f3b6",
+        "group": "24139a12.3f2eb6",
+        "order": 5,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Temp Máxima",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 856.4507446289062,
+        "y": 858.068639755249,
+        "wires": []
+    },
+    {
+        "id": "2618d00a.ec73d",
+        "type": "ui_text",
+        "z": "3d831a06.21f3b6",
+        "group": "24139a12.3f2eb6",
+        "order": 10,
+        "width": "4",
+        "height": "1",
+        "name": "",
+        "label": "Umid Máxima",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 860.0218658447266,
+        "y": 990.9258937835693,
+        "wires": []
+    },
+    {
+        "id": "28c04408.ce6eec",
+        "type": "ui_slider",
+        "z": "3d831a06.21f3b6",
+        "name": "umidmaxima",
+        "label": "Umidade Maxima",
+        "tooltip": "seleciona a umidade de alarme",
+        "group": "24139a12.3f2eb6",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "condicao/umid/maxima",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "x": 602.1645584106445,
+        "y": 986.2828884124756,
+        "wires": [
+            [
+                "2618d00a.ec73d"
+            ]
+        ]
+    },
+    {
+        "id": "a6fb7967.5564f8",
+        "type": "ui_template",
+        "z": "3d831a06.21f3b6",
+        "group": "eef222ee.f19d",
+        "name": "Log",
+        "order": 0,
+        "width": "16",
+        "height": "5",
+        "format": "<div ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 790.4483451843262,
+        "y": 1440.556824684143,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8ab41aa4.cc3d48",
+        "type": "mqtt out",
+        "z": "3d831a06.21f3b6",
+        "name": "Ventilador",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "broker": "2b7b3867.e401c8",
+        "x": 1151.7142333984375,
+        "y": 829.5714721679688,
+        "wires": []
+    },
+    {
+        "id": "8f6dbca5.da76d",
+        "type": "ui_group",
+        "z": "3d831a06.21f3b6",
+        "name": "Ambiente",
+        "tab": "ac16a0cf.34724",
+        "order": 3,
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "6c19d3dd.f9765c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Alertas",
+        "tab": "ac16a0cf.34724",
+        "order": 4,
+        "disp": true,
+        "width": "4",
+        "collapse": false
+    },
+    {
+        "id": "7cbff095.7585b",
+        "type": "ui_group",
+        "z": "",
+        "name": "Atuadores",
+        "tab": "ac16a0cf.34724",
+        "order": 5,
+        "disp": true,
+        "width": "4",
+        "collapse": false
+    },
+    {
+        "id": "723e83e.81f7f7c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Temperatura",
+        "tab": "ac16a0cf.34724",
+        "order": 7,
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "24139a12.3f2eb6",
+        "type": "ui_group",
+        "z": "",
+        "name": "Modo usuário",
+        "tab": "ac16a0cf.34724",
+        "order": 6,
+        "disp": true,
+        "width": "6",
+        "collapse": true
+    },
+    {
+        "id": "4892a209.faeb9c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Modo Autônomo",
+        "tab": "ac16a0cf.34724",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "476293e6.680bfc",
+        "type": "ui_group",
+        "z": "",
+        "name": "Umidade",
+        "tab": "ac16a0cf.34724",
+        "order": 8,
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "eef222ee.f19d",
+        "type": "ui_group",
+        "z": "",
+        "name": "Log",
+        "tab": "ac16a0cf.34724",
+        "order": 9,
+        "disp": true,
+        "width": "16",
+        "collapse": true
+    },
+    {
+        "id": "2b7b3867.e401c8",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "Mosquitto Local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "15",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "ac16a0cf.34724",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Alerta Meteorológico",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
