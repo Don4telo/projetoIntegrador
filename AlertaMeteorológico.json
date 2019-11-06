@@ -1,0 +1,2155 @@
+[
+    {
+        "id": "9f90e29e.91165",
+        "type": "subflow",
+        "name": "Serie temporal",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 70,
+                "y": 152.82897663116455,
+                "wires": [
+                    {
+                        "id": "8d442ed4.05c2e"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 609.9670124053955,
+                "y": 100.00000953674316,
+                "wires": [
+                    {
+                        "id": "831c5785.c98638",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 620.1345195770264,
+                "y": 237.33416175842285,
+                "wires": [
+                    {
+                        "id": "5846524c.9e399c",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": []
+    },
+    {
+        "id": "831c5785.c98638",
+        "type": "function",
+        "z": "9f90e29e.91165",
+        "name": "ultimo dia temp",
+        "func": "msg.payload = msg.payload.metar.temperatura[0]\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 426.6337013244629,
+        "y": 91.11111259460449,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5846524c.9e399c",
+        "type": "function",
+        "z": "9f90e29e.91165",
+        "name": "ultimo dia umid",
+        "func": "msg.payload = msg.payload.metar.umidade[0]\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 426.8012351989746,
+        "y": 241.77860260009766,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8d442ed4.05c2e",
+        "type": "function",
+        "z": "9f90e29e.91165",
+        "name": "concentrador",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 220,
+        "y": 152.82897663116455,
+        "wires": [
+            [
+                "5846524c.9e399c",
+                "831c5785.c98638"
+            ]
+        ]
+    },
+    {
+        "id": "4599c3c8.16ce9c",
+        "type": "tab",
+        "label": "Alerta II",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "cb86e55a.f05158",
+        "type": "inject",
+        "z": "4599c3c8.16ce9c",
+        "name": "Clock",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "3600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 129.66666412353516,
+        "y": 136.33331298828125,
+        "wires": [
+            [
+                "5c553569.c6663c"
+            ]
+        ]
+    },
+    {
+        "id": "5c553569.c6663c",
+        "type": "http request",
+        "z": "4599c3c8.16ce9c",
+        "name": "inpe",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "http://servicos.cptec.inpe.br/XML/estacao/SBSM/condicoesAtuais.xml",
+        "tls": "",
+        "proxy": "",
+        "authType": "basic",
+        "x": 156.03195190429688,
+        "y": 253.20635986328125,
+        "wires": [
+            [
+                "4227ffac.a6a0c",
+                "880904a6.965638"
+            ]
+        ]
+    },
+    {
+        "id": "4227ffac.a6a0c",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "xml",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 366.0224380493164,
+        "y": 80.11917304992676,
+        "wires": []
+    },
+    {
+        "id": "9921b90f.0dd808",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.metar.temperatura[0]",
+        "targetType": "jsonata",
+        "x": 475.3002395629883,
+        "y": 199.02380657196045,
+        "wires": []
+    },
+    {
+        "id": "880904a6.965638",
+        "type": "xml",
+        "z": "4599c3c8.16ce9c",
+        "name": "xml",
+        "property": "payload",
+        "attr": "",
+        "chr": "",
+        "x": 181.18115615844727,
+        "y": 370.76190662384033,
+        "wires": [
+            [
+                "a9f14172.09f79",
+                "9921b90f.0dd808",
+                "1a033bf0.a1b6b4",
+                "84b0ecf7.92398"
+            ]
+        ]
+    },
+    {
+        "id": "a9f14172.09f79",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 465.6175003051758,
+        "y": 151.87304878234863,
+        "wires": []
+    },
+    {
+        "id": "1a033bf0.a1b6b4",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "gravaCondições",
+        "func": "flow.set('tempMax',18);\nflow.set('tempMin',20);\nflow.set('umidMax',80);\nflow.set('umidMin',50);\nflow.set('modo','inicio');\nmsg.payload.tempMax = flow.get('tempMax');\nmsg.payload.tempMin = flow.get('tempMin');\nmsg.payload.umidMax = flow.get('umidMax');\nmsg.payload.umidMin = flow.get('umidMin');\nmsg.payload.modo = \"inicio\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 170.66665649414062,
+        "y": 574.0000610351562,
+        "wires": [
+            [
+                "ed630be5.6e4e58",
+                "d6d46a3a.3c8038",
+                "9e7339b4.543e58"
+            ]
+        ]
+    },
+    {
+        "id": "ed630be5.6e4e58",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 137.33331298828125,
+        "y": 634,
+        "wires": []
+    },
+    {
+        "id": "d6d46a3a.3c8038",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "logicaAlertaTemperatura",
+        "func": "\n// le a temperatura converte pra int e se for menor que tempMin estado frio = true, liga aquecedor = true\nif (parseInt(msg.payload.metar.temperatura[0]) < flow.get('tempMin')){ \nmsg.payload.frio = true;\nmsg.payload.aquecimento = true;\n}\nelse{\n    msg.payload.frio = false;\n    msg.payload.aquecimento = false;\n}\n// le a temperatura converte pra int e se estiver entre tempMin e tempMax, estado frio = false, estado calor = false\nif ((parseInt(msg.payload.metar.temperatura[0]) >= flow.get('tempMin')) && (parseInt(msg.payload.metar.temperatura[0]) < flow.get('tempMax'))){\nmsg.payload.frio = false;\nmsg.payload.aquecimento = false;\nmsg.payload.calor = false;\nmsg.payload.ventilacao = false;\n}\n// le a temperatura converte pra int e se for maior que tempMax estado calor = true, liga ventilação = true\nif (parseInt(msg.payload.metar.temperatura[0]) >= flow.get('tempMax')){\nmsg.payload.calor = true;\nmsg.payload.ventilacao = true;\n}\nelse{\n    msg.payload.calor = false;\n    msg.payload.ventilacao = false;\n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 444.00006103515625,
+        "y": 501.00000762939453,
+        "wires": [
+            [
+                "2cbab21f.17010e",
+                "fc2d454f.4a8c38",
+                "5611c671.eca368",
+                "50438a92.0d8104",
+                "958c2750.d491d8"
+            ]
+        ]
+    },
+    {
+        "id": "2cbab21f.17010e",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 454.3333740234375,
+        "y": 571.3333206176758,
+        "wires": []
+    },
+    {
+        "id": "23ad68ba.3e1a38",
+        "type": "mqtt out",
+        "z": "4599c3c8.16ce9c",
+        "name": "moduloMQTT",
+        "topic": "",
+        "qos": "0",
+        "retain": "",
+        "broker": "2b7b3867.e401c8",
+        "x": 1640.9996490478516,
+        "y": 1028.1667022705078,
+        "wires": []
+    },
+    {
+        "id": "58c947d9.8d25c8",
+        "type": "mqtt in",
+        "z": "4599c3c8.16ce9c",
+        "name": "atuadores",
+        "topic": "#",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "2b7b3867.e401c8",
+        "x": 1923.166748046875,
+        "y": 939.6664428710938,
+        "wires": [
+            [
+                "8582bc92.71ddf"
+            ]
+        ]
+    },
+    {
+        "id": "8dbf9ea7.6bb4f",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 2397.166748046875,
+        "y": 1210.9046630859375,
+        "wires": []
+    },
+    {
+        "id": "fc2d454f.4a8c38",
+        "type": "switch",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchFrio",
+        "property": "payload.frio",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1018.9998321533203,
+        "y": 894.8333892822266,
+        "wires": [
+            [
+                "76183329.0227ac",
+                "97cfb3b5.042ec"
+            ],
+            [
+                "2b31e51e.6cb05a"
+            ]
+        ]
+    },
+    {
+        "id": "76183329.0227ac",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1045.3331451416016,
+        "y": 819.1667022705078,
+        "wires": []
+    },
+    {
+        "id": "46940cff.f5ecc4",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 1563.3331451416016,
+        "y": 810.1667022705078,
+        "wires": []
+    },
+    {
+        "id": "97cfb3b5.042ec",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "msgAquecedorTrue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "atuador/aquecedor",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "qos",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1270.9998931884766,
+        "y": 875.5000152587891,
+        "wires": [
+            [
+                "23ad68ba.3e1a38"
+            ]
+        ]
+    },
+    {
+        "id": "2b31e51e.6cb05a",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "msgAquecedorFalse",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "atuador/aquecedor",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "qos",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1281.333023071289,
+        "y": 923.1667022705078,
+        "wires": [
+            [
+                "23ad68ba.3e1a38",
+                "46940cff.f5ecc4"
+            ]
+        ]
+    },
+    {
+        "id": "cc431cf5.fba88",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Atuadores - módulo que recebe as mensagens via MQTT, e aciona os atuadores",
+        "info": "",
+        "x": 2152.833396911621,
+        "y": 864.6665935516357,
+        "wires": []
+    },
+    {
+        "id": "9e7339b4.543e58",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "logicaAlertaUmidade",
+        "func": "\n// le a umidade converte pra int e se for menor que umidMin estado seco = true, liga irrigador = true\nif (parseInt(msg.payload.metar.umidade[0]) < flow.get('umidMin')){ \nmsg.payload.seco = true;\nmsg.payload.irrigacao = true;\n}\nelse{\n    msg.payload.seco = false;\n    msg.payload.irrigacao = false;\n}\n// le a umidade converte pra int e se estiver entre umidMin e uimdMax, estado seco = false, estado umido = false\nif ((parseInt(msg.payload.metar.umidade[0]) >= flow.get('umidMin')) && (parseInt(msg.payload.metar.umidade[0]) < flow.get('umidMax'))){\nmsg.payload.seco = false;\nmsg.payload.irrigacao = false;\nmsg.payload.umido = false;\nmsg.payload.desumidificacao = false;\n}\n// le a temperatura converte pra int e se for maior que uimdMax estado umido = true, liga desumidificador = true\nif (parseInt(msg.payload.metar.umidade[0]) >= flow.get('umidMax')){\n    msg.payload.umido = true;\n    msg.payload.desumidificacao = true;\n}\nelse{\n    msg.payload.umido = false;\n    msg.payload.desumidificacao = false;   \n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 432.9999465942383,
+        "y": 756.3332633972168,
+        "wires": [
+            [
+                "5f242f37.62b39",
+                "74e6d626.73c548",
+                "1edf7c92.912d23",
+                "3b8426f7.9063ea",
+                "defefcde.cfe66"
+            ]
+        ]
+    },
+    {
+        "id": "5611c671.eca368",
+        "type": "switch",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchCalor",
+        "property": "payload.calor",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1038.3331451416016,
+        "y": 985.1667022705078,
+        "wires": [
+            [
+                "140e288e.d33fe7"
+            ],
+            [
+                "33898ae3.f90096"
+            ]
+        ]
+    },
+    {
+        "id": "140e288e.d33fe7",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "msgVentiladorTrue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "atuador/ventilador",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "qos",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1272.3331451416016,
+        "y": 973.8333282470703,
+        "wires": [
+            [
+                "23ad68ba.3e1a38"
+            ]
+        ]
+    },
+    {
+        "id": "33898ae3.f90096",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "msgAquecedorFalse",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "atuador/ventilador",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "qos",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1282.6663970947266,
+        "y": 1025.4999542236328,
+        "wires": [
+            [
+                "23ad68ba.3e1a38"
+            ]
+        ]
+    },
+    {
+        "id": "5f242f37.62b39",
+        "type": "switch",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchSeco",
+        "property": "payload.seco",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1038.3331451416016,
+        "y": 1093.1667022705078,
+        "wires": [
+            [
+                "281ff008.9219e"
+            ],
+            [
+                "9013a99a.452fe8"
+            ]
+        ]
+    },
+    {
+        "id": "74e6d626.73c548",
+        "type": "switch",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchUmido",
+        "property": "payload.umido",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1039.6664581298828,
+        "y": 1185.4999542236328,
+        "wires": [
+            [
+                "e06062b0.f86db"
+            ],
+            [
+                "b252b384.902ea"
+            ]
+        ]
+    },
+    {
+        "id": "281ff008.9219e",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "msgUmidificadorTrue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "atuador/umidificador",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "qos",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1282.3331451416016,
+        "y": 1077.8333282470703,
+        "wires": [
+            [
+                "23ad68ba.3e1a38"
+            ]
+        ]
+    },
+    {
+        "id": "9013a99a.452fe8",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "msgUmidificadorFalse",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "atuador/umidificador",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "qos",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1282.666275024414,
+        "y": 1131.4999542236328,
+        "wires": [
+            [
+                "23ad68ba.3e1a38"
+            ]
+        ]
+    },
+    {
+        "id": "e06062b0.f86db",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "msgDesumidificadorTrue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "atuador/desumidificador",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "qos",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1295.6663970947266,
+        "y": 1184.1665802001953,
+        "wires": [
+            [
+                "23ad68ba.3e1a38"
+            ]
+        ]
+    },
+    {
+        "id": "b252b384.902ea",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "msgDesumidificadorFalse",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "atuador/desumidificador",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "qos",
+                "pt": "msg",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1297.999771118164,
+        "y": 1233.8333282470703,
+        "wires": [
+            [
+                "23ad68ba.3e1a38"
+            ]
+        ]
+    },
+    {
+        "id": "a5e69256.8e368",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Módulo MQTT - constrói as mensagens MQTT para envio aos atuadores",
+        "info": "",
+        "x": 1194.9996948242188,
+        "y": 767.1667003631592,
+        "wires": []
+    },
+    {
+        "id": "65995e94.6764d",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Módulo Temperatura",
+        "info": "",
+        "x": 451,
+        "y": 453.00000762939453,
+        "wires": []
+    },
+    {
+        "id": "aa4d6e5e.0b757",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Módulo Umidade",
+        "info": "",
+        "x": 418.00000762939453,
+        "y": 705.0000114440918,
+        "wires": []
+    },
+    {
+        "id": "1edf7c92.912d23",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 384.00000762939453,
+        "y": 815.0000114440918,
+        "wires": []
+    },
+    {
+        "id": "66f41edd.9064e",
+        "type": "mqtt in",
+        "z": "4599c3c8.16ce9c",
+        "name": "atuadorAquecedor",
+        "topic": "atuador/aquecedor",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "2b7b3867.e401c8",
+        "x": 1943.8333053588867,
+        "y": 1018.9046688079834,
+        "wires": [
+            [
+                "950f7c49.1f05f"
+            ]
+        ]
+    },
+    {
+        "id": "562878a5.fc9d88",
+        "type": "mqtt in",
+        "z": "4599c3c8.16ce9c",
+        "name": "atuadorUmidificador",
+        "topic": "atuador/umidificador",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "2b7b3867.e401c8",
+        "x": 1949.8333053588867,
+        "y": 1158.9046688079834,
+        "wires": [
+            [
+                "24a165a9.3707ca"
+            ]
+        ]
+    },
+    {
+        "id": "3cc6070.1e3f3fa",
+        "type": "mqtt in",
+        "z": "4599c3c8.16ce9c",
+        "name": "atuadorDesumidificador",
+        "topic": "atuador/desumidificador",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "2b7b3867.e401c8",
+        "x": 1957.8333053588867,
+        "y": 1112.9046688079834,
+        "wires": [
+            [
+                "3bb48faf.dd5c5"
+            ]
+        ]
+    },
+    {
+        "id": "347cd6c3.fd4d1a",
+        "type": "mqtt in",
+        "z": "4599c3c8.16ce9c",
+        "name": "atuadorVentilador",
+        "topic": "atuador/ventilador",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "2b7b3867.e401c8",
+        "x": 1935.8333053588867,
+        "y": 1066.9046688079834,
+        "wires": [
+            [
+                "ea16401d.33b62"
+            ]
+        ]
+    },
+    {
+        "id": "cb26b717.c37118",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "func": "msg.payload = {\n  \"alertData\": {\n    \"timestamp\": 1536127239.706,\n    \"roi\": { \"top\": 0, \"left\": 0, \"width\": 60, \"height\": 33 }\n  },\n  \"alertType\": \"Motion detected\",\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 157.00001525878906,
+        "y": 1123.1666278839111,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5a4ad17c.0a415",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Módulo Alerta",
+        "info": "",
+        "x": 901.0001525878906,
+        "y": 1305.8333435058594,
+        "wires": []
+    },
+    {
+        "id": "aaa08759.5f6bd8",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "Alertas",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 1520.8335189819336,
+        "y": 1498.1665267944336,
+        "wires": []
+    },
+    {
+        "id": "8a7d4ef2.5fce4",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "trigger",
+        "func": "msg.payload = {\"arg\":\"trigger\"};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 166.66665649414062,
+        "y": 1055.8333263397217,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3b8426f7.9063ea",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "alertaUmidade",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 903.3334884643555,
+        "y": 1467.1666793823242,
+        "wires": [
+            [
+                "c1c5effd.025fa",
+                "96e30e77.74d1b"
+            ]
+        ]
+    },
+    {
+        "id": "c1c5effd.025fa",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "alertSeco",
+        "func": "var alerta = null;\nvar timestamp = null;\nvar valor = null;\nvar dispositivo = msg.payload.metar.codigo[0]\nvar now = new Date().toLocaleString(\"pt-BR\");\nvar seco = msg.payload.seco\nif(seco === true){\n    alerta = \"seco\";\n    valor = msg.payload.metar.umidade[0];\n}\nmsg.payload = {\n  \"alertaData\": {\n    \"alertaTimestamp\": now,\n    \"alertaTipo\": alerta,\n    \"alertaValor\": valor,\n    \"alertaDispositivo\": dispositivo,\n  },\n};\nif (alerta !== null)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1094.3334274291992,
+        "y": 1478.4999313354492,
+        "wires": [
+            [
+                "77e8b308.7b2f9c",
+                "aaa08759.5f6bd8",
+                "edfcd7d4.5f2cf8"
+            ]
+        ]
+    },
+    {
+        "id": "96e30e77.74d1b",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "alertUmido",
+        "func": "var alerta = null;\nvar timestamp = null;\nvar valor = null;\nvar dispositivo = msg.payload.metar.codigo[0]\nvar now = new Date().toLocaleString(\"pt-BR\");\nvar umido = msg.payload.umido\nif(umido === true){\n    alerta = \"umido\";\n    valor = msg.payload.metar.umidade[0];\n}\nmsg.payload = {\n  \"alertaData\": {\n    \"alertaTimestamp\": now,\n    \"alertaTipo\": alerta,\n    \"alertaValor\": valor,\n    \"alertaDispositivo\": dispositivo,\n  },\n};\nif (alerta !== null)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1098.3334274291992,
+        "y": 1534.4999313354492,
+        "wires": [
+            [
+                "77e8b308.7b2f9c",
+                "aaa08759.5f6bd8",
+                "edfcd7d4.5f2cf8"
+            ]
+        ]
+    },
+    {
+        "id": "defefcde.cfe66",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "alertaVisualUmid",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 898.8335647583008,
+        "y": 493.66659450531006,
+        "wires": [
+            [
+                "4bd46dc.22f6d94",
+                "a386a381.b8997"
+            ]
+        ],
+        "inputLabels": [
+            "liga"
+        ],
+        "outputLabels": [
+            "desliga"
+        ]
+    },
+    {
+        "id": "4bd46dc.22f6d94",
+        "type": "switch",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchSeco",
+        "property": "payload.seco",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1152.1668319702148,
+        "y": 513.6666345596313,
+        "wires": [
+            [
+                "2937ffc5.139eb"
+            ],
+            [
+                "4505f835.534ab8"
+            ]
+        ]
+    },
+    {
+        "id": "a386a381.b8997",
+        "type": "switch",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchUmido",
+        "property": "payload.umido",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1148.83349609375,
+        "y": 604.3332033157349,
+        "wires": [
+            [
+                "6a99dba9.4dc2a4",
+                "94397b3a.e56208"
+            ],
+            [
+                "6a99dba9.4dc2a4",
+                "a8138eb2.4fcd4"
+            ]
+        ]
+    },
+    {
+        "id": "50438a92.0d8104",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "alertaVisualTemp",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 895.5002746582031,
+        "y": 428.3332986831665,
+        "wires": [
+            [
+                "560ec706.2cbea8",
+                "d751fc0b.ced46"
+            ]
+        ],
+        "inputLabels": [
+            "liga"
+        ],
+        "outputLabels": [
+            "desliga"
+        ]
+    },
+    {
+        "id": "560ec706.2cbea8",
+        "type": "switch",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchFrio",
+        "property": "payload.frio",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1166.166790008545,
+        "y": 350.6665277481079,
+        "wires": [
+            [
+                "7106a4fc.9fab8c"
+            ],
+            [
+                "8838a162.a8763"
+            ]
+        ]
+    },
+    {
+        "id": "d751fc0b.ced46",
+        "type": "switch",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchCalor",
+        "property": "payload.calor",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1156.5001220703125,
+        "y": 427.6666326522827,
+        "wires": [
+            [
+                "20324db7.309d62"
+            ],
+            [
+                "b5edfe8c.ea32c"
+            ]
+        ]
+    },
+    {
+        "id": "1b71c1f7.82af4e",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Módulo Alertas Visuais",
+        "info": "permite a visualização dos alertas na dashboard\nno painel de alertas, representados por leds, \nligados = alerta disparado, \ndesligados = sem alertas.",
+        "x": 902.5002365112305,
+        "y": 358.3332757949829,
+        "wires": []
+    },
+    {
+        "id": "1cf1dba1.f6aad4",
+        "type": "ui_toast",
+        "z": "4599c3c8.16ce9c",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "topic": "",
+        "name": "",
+        "x": 1695.8334579467773,
+        "y": 1362.1665935516357,
+        "wires": []
+    },
+    {
+        "id": "77e8b308.7b2f9c",
+        "type": "template",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Alerta: {{payload.alertaData.alertaTipo}} !",
+        "output": "str",
+        "x": 1460.3335189819336,
+        "y": 1392.666524887085,
+        "wires": [
+            [
+                "1cf1dba1.f6aad4",
+                "fb1a478d.dda8d8"
+            ]
+        ]
+    },
+    {
+        "id": "720294bd.c7569c",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "alertFrio",
+        "func": "var alerta = null;\nvar timestamp = null;\nvar valor = null;\nvar dispositivo = msg.payload.metar.codigo[0]\nvar now = new Date().toLocaleString(\"pt-BR\");\nvar frio = msg.payload.frio\nif(frio === true){\n    alerta = \"frio\";\n    valor = msg.payload.metar.temperatura[0];\n}\nmsg.payload = {\n  \"alertaData\": {\n    \"alertaTimestamp\": now,\n    \"alertaTipo\": alerta,\n    \"alertaValor\": valor,\n    \"alertaDispositivo\": dispositivo,\n  },\n};\nif (alerta !== null)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1102.3334274291992,
+        "y": 1372.4999313354492,
+        "wires": [
+            [
+                "77e8b308.7b2f9c",
+                "aaa08759.5f6bd8",
+                "edfcd7d4.5f2cf8"
+            ]
+        ]
+    },
+    {
+        "id": "63975b60.dd6f04",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "alertCalor",
+        "func": "var alerta = null;\nvar timestamp = null;\nvar valor = null;\nvar dispositivo = msg.payload.metar.codigo[0]\nvar now = new Date().toLocaleString(\"pt-BR\");\nvar calor = msg.payload.calor\nif(calor === true){\n    alerta = \"calor\";\n    valor = msg.payload.metar.temperatura[0];\n}\nmsg.payload = {\n  \"alertaData\": {\n    \"alertaTimestamp\": now,\n    \"alertaTipo\": alerta,\n    \"alertaValor\": valor,\n    \"alertaDispositivo\": dispositivo,\n  },\n};\nif (alerta !== null)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1098.3334274291992,
+        "y": 1424.4999313354492,
+        "wires": [
+            [
+                "77e8b308.7b2f9c",
+                "aaa08759.5f6bd8",
+                "edfcd7d4.5f2cf8"
+            ]
+        ]
+    },
+    {
+        "id": "958c2750.d491d8",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "alertaTemperatura",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 908.3334884643555,
+        "y": 1408.4999313354492,
+        "wires": [
+            [
+                "720294bd.c7569c",
+                "63975b60.dd6f04"
+            ]
+        ]
+    },
+    {
+        "id": "fb1a478d.dda8d8",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1676.6668319702148,
+        "y": 1416.1665935516357,
+        "wires": []
+    },
+    {
+        "id": "a5b97b6c.a28c88",
+        "type": "ui_chart",
+        "z": "4599c3c8.16ce9c",
+        "name": "Ultimo dia",
+        "group": "71e1b9da.1d2618",
+        "order": 1,
+        "width": "8",
+        "height": "4",
+        "label": "Ultimo dia",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "40",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff8000",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "outputs": 1,
+        "x": 1527.0000305175781,
+        "y": 188.00000381469727,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "62b0c172.6cc9",
+        "type": "ui_chart",
+        "z": "4599c3c8.16ce9c",
+        "name": "Ultimo dia",
+        "group": "3e3a7f40.d83e8",
+        "order": 1,
+        "width": "8",
+        "height": "4",
+        "label": "Ultimo dia",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff8000",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "outputs": 1,
+        "x": 1528.2821350097656,
+        "y": 236.64667129516602,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "db673e39.02683",
+        "type": "ui_gauge",
+        "z": "4599c3c8.16ce9c",
+        "name": "Temperatura",
+        "group": "e2fd77c3.40ec48",
+        "order": 1,
+        "width": "4",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Temperatura",
+        "label": "°C",
+        "format": "{{payload.metar.temperatura[0]}}",
+        "min": "-10",
+        "max": "44",
+        "colors": [
+            "#359aff",
+            "#008040",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1525.0221099853516,
+        "y": 103.11065769195557,
+        "wires": []
+    },
+    {
+        "id": "bfdbba0c.585778",
+        "type": "ui_led",
+        "z": "4599c3c8.16ce9c",
+        "group": "1dfd626c.d372ae",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "label": "Frio",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "red",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Frio",
+        "x": 1715.7775268554688,
+        "y": 387.17645740509033,
+        "wires": []
+    },
+    {
+        "id": "5b436e80.a46d",
+        "type": "ui_led",
+        "z": "4599c3c8.16ce9c",
+        "group": "1dfd626c.d372ae",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "label": "Calor",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "red",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Calor",
+        "x": 1716.3932075500488,
+        "y": 437.92247104644775,
+        "wires": []
+    },
+    {
+        "id": "ea16401d.33b62",
+        "type": "ui_led",
+        "z": "4599c3c8.16ce9c",
+        "group": "c73bb082.7fe7",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "label": "Ventilador",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "yellow",
+                "value": "true",
+                "valueType": "str"
+            }
+        ],
+        "name": "Ventilador",
+        "x": 2419.091552734375,
+        "y": 1063.4586181640625,
+        "wires": []
+    },
+    {
+        "id": "950f7c49.1f05f",
+        "type": "ui_led",
+        "z": "4599c3c8.16ce9c",
+        "group": "c73bb082.7fe7",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "label": "Aquecedor",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "yellow",
+                "value": "true",
+                "valueType": "str"
+            }
+        ],
+        "name": "Aquecedor",
+        "x": 2408.9072265625,
+        "y": 1020.0009155273438,
+        "wires": []
+    },
+    {
+        "id": "8fd03fe2.02a7f",
+        "type": "ui_gauge",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "group": "e2fd77c3.40ec48",
+        "order": 2,
+        "width": "4",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Umidade",
+        "label": "%",
+        "format": "{{payload.metar.umidade[0]}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ff0000",
+            "#008040",
+            "#ff0000"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1529.6174507141113,
+        "y": 144.76147651672363,
+        "wires": []
+    },
+    {
+        "id": "6b1646e4.26f9b8",
+        "type": "ui_led",
+        "z": "4599c3c8.16ce9c",
+        "group": "1dfd626c.d372ae",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "Seco",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "red",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Seco",
+        "x": 1719.4284057617188,
+        "y": 488.16057109832764,
+        "wires": []
+    },
+    {
+        "id": "4298e94d.7b2b78",
+        "type": "ui_led",
+        "z": "4599c3c8.16ce9c",
+        "group": "1dfd626c.d372ae",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "Umido",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "red",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Umido",
+        "x": 1728.4728393554688,
+        "y": 542.6367902755737,
+        "wires": []
+    },
+    {
+        "id": "3685256.ca69fda",
+        "type": "ui_led",
+        "z": "4599c3c8.16ce9c",
+        "group": "c73bb082.7fe7",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "Irrigador",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "yellow",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Irrigador",
+        "x": 2418.13916015625,
+        "y": 1159.2520751953125,
+        "wires": []
+    },
+    {
+        "id": "2593e2c9.a15e6e",
+        "type": "ui_led",
+        "z": "4599c3c8.16ce9c",
+        "group": "c73bb082.7fe7",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "label": "Desumidificador",
+        "labelPlacement": "left",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "yellow",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "name": "Desumidificador",
+        "x": 2400.06591796875,
+        "y": 1105.556396484375,
+        "wires": []
+    },
+    {
+        "id": "6a99dba9.4dc2a4",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1379.0003814697266,
+        "y": 670.4999103546143,
+        "wires": []
+    },
+    {
+        "id": "7106a4fc.9fab8c",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchFrioTrue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1377.5002136230469,
+        "y": 331.6666269302368,
+        "wires": [
+            [
+                "bfdbba0c.585778"
+            ]
+        ]
+    },
+    {
+        "id": "20324db7.309d62",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchCalortrue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1382.5002517700195,
+        "y": 414.9998617172241,
+        "wires": [
+            [
+                "5b436e80.a46d"
+            ]
+        ]
+    },
+    {
+        "id": "2937ffc5.139eb",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchSecoTrue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1389.166877746582,
+        "y": 501.6665515899658,
+        "wires": [
+            [
+                "6b1646e4.26f9b8"
+            ]
+        ]
+    },
+    {
+        "id": "94397b3a.e56208",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchUmidoTrue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1404.1669998168945,
+        "y": 584.9999713897705,
+        "wires": [
+            [
+                "4298e94d.7b2b78"
+            ]
+        ]
+    },
+    {
+        "id": "8838a162.a8763",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchFrioFalse",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1380.8334655761719,
+        "y": 369.99996185302734,
+        "wires": [
+            [
+                "bfdbba0c.585778"
+            ]
+        ]
+    },
+    {
+        "id": "b5edfe8c.ea32c",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchCalorFalse",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1395.8335456848145,
+        "y": 451.66652965545654,
+        "wires": [
+            [
+                "5b436e80.a46d"
+            ]
+        ]
+    },
+    {
+        "id": "4505f835.534ab8",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchSecoFalse",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1402.5000915527344,
+        "y": 538.3331804275513,
+        "wires": [
+            [
+                "6b1646e4.26f9b8"
+            ]
+        ]
+    },
+    {
+        "id": "a8138eb2.4fcd4",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "switchUmidoFalse",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1405.8335494995117,
+        "y": 619.999852180481,
+        "wires": [
+            [
+                "4298e94d.7b2b78"
+            ]
+        ]
+    },
+    {
+        "id": "99420afc.49cfe8",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Painel de Alertas na Dashboard",
+        "info": "permite a visualização dos alertas na dashboard\nno painel de alertas, representados por leds, \nligados = alerta disparado, \ndesligados = sem alertas.",
+        "x": 1712.5001907348633,
+        "y": 329.99988174438477,
+        "wires": []
+    },
+    {
+        "id": "24a165a9.3707ca",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "func": "if (msg.payload === \"true\")\n    msg.payload = true;\nelse\n    msg.payload = false;\nreturn msg; ",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2198.16650390625,
+        "y": 1158.9046630859375,
+        "wires": [
+            [
+                "8dbf9ea7.6bb4f",
+                "3685256.ca69fda"
+            ]
+        ]
+    },
+    {
+        "id": "8582bc92.71ddf",
+        "type": "debug",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 2346.83349609375,
+        "y": 940.3333129882812,
+        "wires": []
+    },
+    {
+        "id": "3bb48faf.dd5c5",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "func": "if (msg.payload === \"true\")\n    msg.payload = true;\nelse\n    msg.payload = false;\nreturn msg; ",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2204.833251953125,
+        "y": 1107.9046630859375,
+        "wires": [
+            [
+                "2593e2c9.a15e6e"
+            ]
+        ]
+    },
+    {
+        "id": "c0a567ad.c76b58",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Envia ao BROKER local",
+        "info": "",
+        "x": 1657.666519165039,
+        "y": 963.8333587646484,
+        "wires": []
+    },
+    {
+        "id": "6a255dbd.9d0ff4",
+        "type": "subflow:9f90e29e.91165",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "env": [],
+        "x": 1322.5000267028809,
+        "y": 207.5000057220459,
+        "wires": [
+            [
+                "a5b97b6c.a28c88"
+            ],
+            [
+                "62b0c172.6cc9"
+            ]
+        ]
+    },
+    {
+        "id": "84b0ecf7.92398",
+        "type": "function",
+        "z": "4599c3c8.16ce9c",
+        "name": "graficos",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1060.000015258789,
+        "y": 152.50000190734863,
+        "wires": [
+            [
+                "6a255dbd.9d0ff4",
+                "8fd03fe2.02a7f",
+                "db673e39.02683"
+            ]
+        ]
+    },
+    {
+        "id": "4b24f96.0ae3b08",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Exibe Gráficos dos valores na dashboard",
+        "info": "",
+        "x": 1240.000015258789,
+        "y": 85.00000095367432,
+        "wires": []
+    },
+    {
+        "id": "b0f974e7.41dce8",
+        "type": "comment",
+        "z": "4599c3c8.16ce9c",
+        "name": "Topicos MQTT ",
+        "info": " Hierrquia dos tópicos\n\natuador/aquecedor\natuador/ventilador\natuador/umidificador\natuador/desumidificador\n\n\n\n\n\n\n\n\n**exemplo:**\n\nsetor1/atuador/aquecedor/teto\nsetor1/atuador/aquecedor/chao\nsetor1/atuador/ventilador\nsetor1/atuador/umidificador\nsetor1/atuador/desumidificador\n\nsetor2/atuador/aquecedor\nsetor2/atuador/ventilador\nsetor2/atuador/umidificador\nsetor2/atuador/desumidificador",
+        "x": 1649.5234146118164,
+        "y": 1100.4761199951172,
+        "wires": []
+    },
+    {
+        "id": "99acc279.5fec7",
+        "type": "inject",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "topic": "olala",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 1465.52783203125,
+        "y": 1705.361083984375,
+        "wires": [
+            [
+                "7a33620f.d5831c"
+            ]
+        ]
+    },
+    {
+        "id": "7a33620f.d5831c",
+        "type": "pushbullet",
+        "z": "4599c3c8.16ce9c",
+        "config": "4b1eb4e4.10a90c",
+        "pushtype": "note",
+        "title": "",
+        "chan": "",
+        "name": "",
+        "x": 1758,
+        "y": 1652.75,
+        "wires": []
+    },
+    {
+        "id": "edfcd7d4.5f2cf8",
+        "type": "change",
+        "z": "4599c3c8.16ce9c",
+        "name": "notificaCelular",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "alertaMeteoro",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1393.25,
+        "y": 1599.25,
+        "wires": [
+            [
+                "c3b6db2b.396c68"
+            ]
+        ]
+    },
+    {
+        "id": "c3b6db2b.396c68",
+        "type": "template",
+        "z": "4599c3c8.16ce9c",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Alerta {{payload.alertaData.alertaTipo}} !!!\nhora: {{payload.alertaData.alertaTimestamp}}\nvalor: {{payload.alertaData.alertaValor}}\ndispositivo: {{payload.alertaData.alertaDispositivo}}\n\nUm serviço de Alerta Meteoroçógico.",
+        "output": "str",
+        "x": 1588.25,
+        "y": 1614.25,
+        "wires": [
+            [
+                "7a33620f.d5831c"
+            ]
+        ]
+    },
+    {
+        "id": "2b7b3867.e401c8",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "Mosquitto Local",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "15",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "71e1b9da.1d2618",
+        "type": "ui_group",
+        "z": "",
+        "name": "Temperatura",
+        "tab": "feb56913.916828",
+        "order": 4,
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "3e3a7f40.d83e8",
+        "type": "ui_group",
+        "z": "",
+        "name": "Umidade",
+        "tab": "feb56913.916828",
+        "order": 5,
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "e2fd77c3.40ec48",
+        "type": "ui_group",
+        "z": "",
+        "name": "Ambiente",
+        "tab": "feb56913.916828",
+        "order": 1,
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "1dfd626c.d372ae",
+        "type": "ui_group",
+        "z": "",
+        "name": "Alertas",
+        "tab": "feb56913.916828",
+        "order": 2,
+        "disp": true,
+        "width": "4",
+        "collapse": false
+    },
+    {
+        "id": "c73bb082.7fe7",
+        "type": "ui_group",
+        "z": "",
+        "name": "Atuadores",
+        "tab": "feb56913.916828",
+        "order": 3,
+        "disp": true,
+        "width": "4",
+        "collapse": false
+    },
+    {
+        "id": "4b1eb4e4.10a90c",
+        "type": "pushbullet-config",
+        "z": "",
+        "name": "alexandre donato"
+    },
+    {
+        "id": "feb56913.916828",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Alerta Meteorológico V2",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
